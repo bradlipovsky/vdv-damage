@@ -1,0 +1,372 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools,empheq}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[round]{natbib}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\Dt}{\mathcal{D}_t}
+\newcommand{\pos}[1]{\left\langle #1\right\rangle_{+}}
+\newcommand{\rmi}{\mathrm{i}}
+\newcommand{\rms}{\mathrm{s}}
+\newcommand{\rmb}{\mathrm{b}}
+\newcommand{\KIc}{K_{\mathrm{Ic}}}
+
+\title{A van der Veen Hydrofracture Criterion\\as a Damage-Evolution Law}
+\author{Technical note}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The van der Veen crevasse models give a fracture-propagation or crack-arrest
+criterion, not a rate law.  Here the fractured fraction of an ice column is
+written as \(D=D_{\rms}+D_{\rmb}\), where \(D_{\rms}\) and \(D_{\rmb}\) are
+the fractions penetrated by surface and basal crevasses.  The criterion is
+converted into an irreversible overstress law.  The central result is the
+explicit source term
+\[
+ \Dt D
+ =\pos{1-D}^{p}
+ \left[
+   \frac{1}{\tau_{\rms}}\pos{\Psi_{\rms}}^{m_{\rms}}
+  +\frac{1}{\tau_{\rmb}}\pos{\Psi_{\rmb}}^{m_{\rmb}}
+ \right],
+\]
+with either stress-intensity-factor drivers (the literal van der Veen LEFM
+model) or inexpensive crack-tip-stress drivers (the common reduced
+crevasse-depth model).  The new timescales and rate exponents are constitutive
+parameters; they are not determined by the original static criterion.
+\end{abstract}
+
+\section{State variables and conventions}
+
+Let \(H>0\) be the local ice thickness, \(d_{\rms}\) the downward penetration
+of surface crevasses, and \(d_{\rmb}\) the upward penetration of basal
+crevasses.  Define
+\begin{equation}
+ D_{\rms}=\frac{d_{\rms}}{H},\qquad
+ D_{\rmb}=\frac{d_{\rmb}}{H},\qquad
+ D=D_{\rms}+D_{\rmb},\qquad 0\leq D\leq1.
+ \label{eq:damage-definition}
+\end{equation}
+Thus \(D\) is a geometric, column-integrated damage variable: it is the
+fraction of the thickness intersected by surface or basal fractures.  The
+constraint \(D\leq1\) assumes that the two fractured intervals do not overlap.
+Full-thickness connection, and hence the local calving/failure condition, is
+\(D=1\).
+
+The material derivative following horizontal ice motion \(\boldsymbol u\) is
+\begin{equation}
+ \Dt(\,\cdot\,)=\frac{\partial(\,\cdot\,)}{\partial t}
+                 +\boldsymbol u\boldsymbol\cdot\nabla(\,\cdot\,),
+ \label{eq:material-derivative}
+\end{equation}
+and \(\pos{x}=\max(x,0)\).  Damage is irreversible here; healing can be
+added as a separate, explicitly justified process if desired.
+
+For a vertical fracture whose normal is the horizontal direction \(n\), let
+\(R_n\) denote the tensile resistive stress.  In a three-dimensional shallow
+stress model it should include the crevasse-parallel deviatoric stress; for
+example, \(R_n=2\tau_{nn}+\tau_{tt}\), rather than using \(\tau_{nn}\) alone
+\citep{reynolds2025}.  Tension is positive.
+
+\section{The original criteria}
+
+\subsection{Literal van der Veen LEFM criterion}
+
+The surface and bottom-crevasse models of \citet{vanderveen1998surface} and
+\citet{vanderveen1998bottom} use linear elastic fracture mechanics (LEFM).
+For either crack \(j\in\{\rms,\rmb\}\), propagation occurs when
+\begin{equation}
+ K_j>\KIc,
+ \label{eq:lefm-criterion}
+\end{equation}
+and an advancing crack arrests where \(K_j=\KIc\).  Here \(K_j\) is the net
+mode-I stress intensity factor and \(\KIc\) is the fracture toughness of ice.
+
+For completeness, write \(a_{\rms}=H D_{\rms}\), let \(y\) measure depth
+downward from the upper surface, and let \(\delta_{\rms}\) be the dry length
+above the water surface in a surface crack.  A convenient statement of the
+van der Veen surface SIF is
+\begin{align}
+ K_{\rms}={}&F(\lambda_{\rms})R_n\sqrt{\pi a_{\rms}}
+ -\frac{2\rho_{\rmi}g}{\sqrt{\pi a_{\rms}}}
+   \int_0^{a_{\rms}} y\,
+      G\!\left(\lambda_{\rms},\frac{y}{a_{\rms}}\right)\dd y \notag\\
+ &+\frac{2\rho_{\rm m}g}{\sqrt{\pi a_{\rms}}}
+   \int_0^{a_{\rms}}\pos{y-\delta_{\rms}}
+      G\!\left(\lambda_{\rms},\frac{y}{a_{\rms}}\right)\dd y,
+ \qquad \lambda_{\rms}=\frac{a_{\rms}}{H}.
+ \label{eq:surface-sif}
+\end{align}
+The three terms are the contributions of resistive stress, ice overburden,
+and surface meltwater.  The water-column height is
+\(h_{\rms}=\pos{a_{\rms}-\delta_{\rms}}\), and \(\rho_{\rm m}\) is the
+meltwater density.
+
+For a basal crack, let \(y\) measure upward from the bed, let \(p_{\rmb}^0\)
+be basal water pressure at the crack mouth, and let \(\rho_{\rmb}\) be the
+water density within the crack.  The corresponding weight-function form is
+\begin{align}
+ K_{\rmb}={}&\frac{2}{\sqrt{\pi a_{\rmb}}}
+ \int_0^{a_{\rmb}}
+ \left[
+ R_n-\rho_{\rmi}g(H-y)
+ +\pos{p_{\rmb}^0-\rho_{\rmb}gy}
+ \right]
+ G\!\left(\lambda_{\rmb},\frac{y}{a_{\rmb}}\right)\dd y,
+ \notag\\[-0.25em]
+ &\hspace{30em}\lambda_{\rmb}=\frac{a_{\rmb}}{H}.
+ \label{eq:basal-sif}
+\end{align}
+The finite-slab functions \(F\) and \(G\) are listed in
+Appendix~\ref{sec:weights}.  Equations~\eqref{eq:surface-sif} and
+\eqref{eq:basal-sif} make all hydrostatic assumptions explicit and are
+directly usable in a quadrature routine.
+
+LEFM requires an existing flaw.  Numerically, initialize
+\(D_j\geq D_{j0}>0\), or evaluate \(K_j\) using
+\(a_j=H\max(D_j,D_{j0})\).  The seed size \(D_{j0}\) is a model parameter,
+not a prediction of LEFM.
+
+\subsection{Reduced crack-tip-stress criterion}
+
+A widely used, cheaper closure places the crack tip where the net opening
+stress vanishes.  It is often grouped with ``van der Veen-type'' or
+crevasse-depth hydrofracture laws, but it is not the same approximation as
+the LEFM criterion above.  Define
+\begin{equation}
+ \Sigma=\frac{R_n}{\rho_{\rmi}gH},\qquad
+ W_{\rms}=\frac{h_{\rms}}{H},\qquad
+ r_{\rms}=\frac{\rho_{\rm m}}{\rho_{\rmi}},\qquad
+ r_{\rmb}=\frac{\rho_{\rmb}}{\rho_{\rmi}},
+ \label{eq:nondimensional-groups}
+\end{equation}
+and the basal height above water-pressure support
+\begin{equation}
+ H_{\rm ab}=H-\frac{p_{\rmb}^0}{\rho_{\rmi}g},
+ \qquad A_{\rmb}=\frac{H_{\rm ab}}{H}.
+ \label{eq:hab}
+\end{equation}
+For marine-connected basal water, \(p_{\rmb}^0=\rho_{\rmb}gw\), where \(w\)
+is water depth at the bed.  The reduced basal expression below assumes that
+water reaches the basal crack tip.  The dimensionless crack-tip opening
+stresses are then
+\begin{align}
+ \Psi_{\rms}^{\rm ZS}
+   &=\Sigma+r_{\rms}W_{\rms}-D_{\rms},
+ \label{eq:surface-zs-driver}\\
+ \Psi_{\rmb}^{\rm ZS}
+   &=\Sigma-A_{\rmb}-(r_{\rmb}-1)D_{\rmb}.
+ \label{eq:basal-zs-driver}
+\end{align}
+The label ZS denotes ``zero stress.''  Positive values open the crack; zero
+values give the usual static depths
+\begin{align}
+ D_{\rms}^{\star}
+   &=\Sigma+r_{\rms}W_{\rms},
+ \label{eq:surface-target}\\
+ D_{\rmb}^{\star}
+   &=\frac{1}{r_{\rmb}-1}\pos{\Sigma-A_{\rmb}}
+    =\frac{\rho_{\rmi}}{\rho_{\rmb}-\rho_{\rmi}}
+      \pos{\frac{R_n}{\rho_{\rmi}gH}-\frac{H_{\rm ab}}{H}}.
+ \label{eq:basal-target}
+\end{align}
+Equation~\eqref{eq:basal-target} assumes \(\rho_{\rmb}>\rho_{\rmi}\).
+These are the familiar surface and basal crevasse-depth formulas used in
+large-scale calving parameterizations \citep{nick2010,reynolds2025}.
+
+\section{Damage-evolution law}
+
+\subsection{Generic kinetic wrapper}
+
+Define a dimensionless fracture driver for each crack family:
+\begin{equation}
+ \Psi_j^{\rm LEFM}=\frac{K_j}{\KIc}-1
+ \quad\text{(literal van der Veen)},
+ \qquad\text{or}\qquad
+ \Psi_j=\Psi_j^{\rm ZS}
+ \quad\text{(reduced model)}.
+ \label{eq:driver-options}
+\end{equation}
+The proposed evolution equations are
+\begin{empheq}[box=\fbox]{align}
+ \Dt D_{\rms}
+ &=\frac{\pos{1-D}^{p}}{\tau_{\rms}}
+   \pos{\Psi_{\rms}}^{m_{\rms}},
+ \label{eq:surface-evolution}\\
+ \Dt D_{\rmb}
+ &=\frac{\pos{1-D}^{p}}{\tau_{\rmb}}
+   \pos{\Psi_{\rmb}}^{m_{\rmb}},
+ \label{eq:basal-evolution}\\
+ \Dt D
+ &=\pos{1-D}^{p}
+ \left[
+   \frac{1}{\tau_{\rms}}\pos{\Psi_{\rms}}^{m_{\rms}}
+  +\frac{1}{\tau_{\rmb}}\pos{\Psi_{\rmb}}^{m_{\rmb}}
+ \right].
+ \label{eq:total-evolution}
+\end{empheq}
+Here \(\tau_j>0\) is a propagation/relaxation timescale,
+\(m_j\geq1\) is a rate-sensitivity exponent, and \(p>0\) controls smooth
+saturation as the remaining ligament vanishes.  The minimal choice is
+\begin{equation}
+ m_{\rms}=m_{\rmb}=p=1.
+ \label{eq:minimal-parameters}
+\end{equation}
+
+Equation~\eqref{eq:total-evolution} is the requested right-hand side for the
+damage material derivative.  It has four useful properties:
+\begin{enumerate}
+ \item it is dimensionally correct because each \(\Psi_j\) is dimensionless
+       and \(\tau_j\) has units of time;
+ \item the positive part enforces irreversibility and reproduces the original
+       propagation threshold;
+ \item static crack-arrest states are unchanged: growth stops when the driver
+       first reaches zero;
+ \item the saturation factor makes the interval \(0\leq D\leq1\) invariant
+       for the continuous equations.
+\end{enumerate}
+The original van der Veen work does not determine \(\tau_j\), \(m_j\), or
+\(p\).  They must be calibrated, resolved as fast brittle timescales, or taken
+to an instantaneous limit.  For \(p>0\), \(D=1\) is approached
+asymptotically, so a numerical model should declare calving at
+\(D\geq1-\epsilon_{\rm calv}\).  If finite-time arrival at exactly \(D=1\)
+is required, omit the saturation factor for \(D<1\) and project the update
+onto the admissible set after each step.
+
+\subsection{Fully explicit reduced law}
+
+Substituting equations~\eqref{eq:surface-zs-driver} and
+\eqref{eq:basal-zs-driver} gives an algebraic right-hand side with no SIF
+quadrature:
+\begin{empheq}[box=\fbox]{align}
+ \Dt D
+ =\pos{1-D}^{p}\Bigg[&
+ \frac{1}{\tau_{\rms}}
+ \pos{\Sigma+r_{\rms}W_{\rms}-D_{\rms}}^{m_{\rms}}
+ \notag\\[-0.15em]
+ &+\frac{1}{\tau_{\rmb}}
+ \pos{\Sigma-A_{\rmb}-(r_{\rmb}-1)D_{\rmb}}^{m_{\rmb}}
+ \Bigg].
+ \label{eq:explicit-reduced-law}
+\end{empheq}
+This is the most convenient form for a depth-integrated ice-flow model.  The
+two component equations, rather than the total equation alone, must be
+advanced because the right-hand side depends separately on \(D_{\rms}\) and
+\(D_{\rmb}\).
+
+For constant water-column height, the surface term relaxes toward
+equation~\eqref{eq:surface-target}.  Hydrology can instead make
+\(W_{\rms}\) a function of damage.  In particular, a fully water-filled
+surface crack has \(W_{\rms}=D_{\rms}\), so
+\begin{equation}
+ \Psi_{\rms}^{\rm ZS}
+ =\Sigma+(r_{\rms}-1)D_{\rms}.
+ \label{eq:full-water-feedback}
+\end{equation}
+Because freshwater is denser than ice, \(r_{\rms}>1\); crack deepening then
+increases the driver and produces the expected hydrofracture runaway.  A
+water-volume or water-supply equation is therefore needed if
+\(h_{\rms}\) is not prescribed.
+
+\section{Coupling and implementation choices}
+
+\paragraph{Stress--damage feedback.}
+The \(R_n\) in the driver should be the trial resistive stress consistent with
+the ice-flow solver.  If a fixed membrane force is carried only by the intact
+ligament, a simple load-sharing closure is
+\begin{equation}
+ R_n^{\rm lig}=\frac{N_n}{H(1-D)},
+ \label{eq:ligament-stress}
+\end{equation}
+which adds destabilizing feedback.  Do not apply
+equation~\eqref{eq:ligament-stress} a second time if the constitutive or flow
+solver already accounts for the loss of load-bearing area.
+
+\paragraph{Thickness evolution.}
+Equations~\eqref{eq:surface-evolution}--\eqref{eq:total-evolution} evolve the
+fraction \(D_j\) as the material state.  If a code instead evolves dimensional
+crack depths, the exact kinematic conversion is
+\begin{equation}
+ \Dt d_j=H\,\Dt D_j+D_j\,\Dt H.
+ \label{eq:dimensional-depth-rate}
+\end{equation}
+One should decide whether changing thickness stretches the interpreted crack
+depth or whether \(D_j\) is retained as a history variable; mixing the two
+interpretations introduces a spurious damage source or sink.
+
+\paragraph{Time stepping.}
+At each material point: (i) compute trial stress and water state; (ii) evaluate
+the two drivers; (iii) advance both component equations; (iv) enforce
+non-negativity and cap \(D_{\rms}+D_{\rmb}\leq1\); and (v) apply the calving
+threshold.  Explicit stepping should resolve the smaller of
+\(\tau_{\rms}\) and \(\tau_{\rmb}\), or use substepping/implicit integration.
+
+\paragraph{Geometry warning.}
+The van der Veen weight functions describe a finite rectangular slab with a
+single edge crack.  They are not universal weight functions; grounded basal
+boundary conditions can materially change the SIF, especially for deep
+cracks \citep{jimenez2018}.  For a grounded-glacier application, retain the
+kinetic wrapper in equations~\eqref{eq:surface-evolution}--
+\eqref{eq:total-evolution} but replace \(K_j\) by one computed with a
+geometry-appropriate weight function or numerical fracture solution.
+
+\section{Recommended minimal model}
+
+For a first implementation in a large-scale model, use
+equation~\eqref{eq:explicit-reduced-law} with
+\(m_{\rms}=m_{\rmb}=p=1\), advect \(D_{\rms}\) and \(D_{\rmb}\) separately,
+and calve at \(D\geq1-\epsilon_{\rm calv}\).  This gives the compact system
+\begin{align}
+ \Dt D_{\rms}
+ &=\frac{1-D}{\tau_{\rms}}
+   \pos{\Sigma+r_{\rms}W_{\rms}-D_{\rms}},
+ \notag\\
+ \Dt D_{\rmb}
+ &=\frac{1-D}{\tau_{\rmb}}
+   \pos{\Sigma-A_{\rmb}-(r_{\rmb}-1)D_{\rmb}},
+ \qquad D=D_{\rms}+D_{\rmb}.
+ \label{eq:recommended-model}
+\end{align}
+When literal adherence to van der Veen LEFM is required, keep exactly the same
+evolution equations and replace the two bracketed drivers with
+\(\pos{K_j/\KIc-1}\), using equations~\eqref{eq:surface-sif} and
+\eqref{eq:basal-sif}.
+
+\appendix
+\section{van der Veen finite-slab weight functions}
+\label{sec:weights}
+
+The functions reproduced by \citet{jimenez2018} are
+\begin{equation}
+ F(\lambda)=1.12-0.23\lambda+10.55\lambda^2
+             -21.72\lambda^3+30.39\lambda^4,
+ \label{eq:F-weight}
+\end{equation}
+and
+\begin{align}
+ G(\lambda,\gamma)={}&
+ \frac{3.52(1-\gamma)}{(1-\lambda)^{3/2}}
+ -\frac{4.35-5.28\gamma}{(1-\lambda)^{1/2}}
+ \notag\\
+ &+\left[
+   \frac{1.30-0.30\gamma^{3/2}}{(1-\gamma^2)^{1/2}}
+   +0.83-1.76\gamma
+ \right]\left[1-(1-\gamma)\lambda\right],
+ \label{eq:G-weight}
+\end{align}
+where \(\lambda=a/H\) and \(\gamma=y/a\).  The crack-tip singularity in
+\(G\) is integrable.  In computation, use endpoint-aware quadrature and stop
+the LEFM calculation short of \(\lambda=1\), where the slab formula is
+singular and the column has already met the calving criterion.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
