@@ -29,12 +29,13 @@ existing crevasse propagates or arrests, but they do not specify a propagation
 rate.  This distinction prevents their direct use as a prognostic damage
 equation.  Here, the fractured thickness fraction is written as
 \(D=D_{\rms}+D_{\rmb}\), and the van der Veen stress-intensity factors are
-retained as the fracture calculation.  A single, explicit kinetic assumption
+retained as the fracture calculation.  A Freund-style elastodynamic relation
 then converts fracture excess into crack-tip speed.  The resulting law
 predicts the same arrest depths as the original criterion and declares
-full-thickness failure when \(D=1\).  The crack-speed scale is new physics,
-not a result of the static criterion, and requires calibration against
-time-resolved crevasse growth.
+full-thickness failure when \(D=1\).  The speed approaches a finite limiting
+value as the stress-intensity factor increases.  This value is the Rayleigh
+wave speed for ideal homogeneous ice, but may require calibration when the
+model represents unresolved crevasse-scale processes.
 \end{abstract}
 
 \section{Mechanical question}
@@ -50,7 +51,7 @@ fracture toughness of ice.  They do not calculate
 This note makes the smallest additional assumption needed to obtain that rate.
 The calculation is separated into two parts.  First, van der Veen mechanics
 determines whether each crack tip is above or below its propagation threshold.
-Second, an explicitly assumed kinetic function maps the threshold excess to a
+Second, a Freund-style kinetic function maps the threshold excess to a
 crack-tip speed.  A reduced zero-stress version is also given because it leads
 to an algebraic right-hand side suitable for a depth-integrated ice model.
 The reduced version is a separate approximation and is not the van der Veen
@@ -111,8 +112,8 @@ Symbol & Meaning and SI units & Symbol & Meaning and SI units \\
 \(\KIc\) & Ice fracture toughness (\(\mathrm{Pa\,m^{1/2}}\)) &
 \(F,G\) & Finite-slab weight functions (dimensionless) \\
 \(\lambda,\gamma\) & Normalized crack length and integration coordinate (dimensionless) &
-\(v_{\rms},v_{\rmb}\) & Characteristic crack speeds (\(\mathrm{m\,s^{-1}}\)) \\
-\(\mathcal{F}_j\) & Assumed kinetic function (dimensionless) &
+\(v_{\rms},v_{\rmb}\) & Crack-speed scales (\(\mathrm{m\,s^{-1}}\)) \\
+\(\mathcal{F}_j,c_{\mathrm{R}}\) & Kinetic function (dimensionless) and Rayleigh wave speed (\(\mathrm{m\,s^{-1}}\)) &
 \(\Sigma\) & Resistive stress normalized by ice overburden (dimensionless) \\
 \(W_{\rms}\) & Surface water-column fraction (dimensionless) &
 \(r_{\rms},r_{\rmb}\) & Water-to-ice density ratios (dimensionless) \\
@@ -224,7 +225,7 @@ Write the unknown dimensionless kinetic relation as
  \mathcal{F}_j(q)>0\quad\text{for }q>1.
  \label{eq:general-kinetics}
 \end{equation}
-If \(v_j\) is a characteristic crack speed in
+If \(v_j\) is a crack-speed scale in
 \(\mathrm{m\,s^{-1}}\), a local rate law consistent with the
 criterion is
 \begin{align}
@@ -240,22 +241,33 @@ criterion is
 These equations have units of inverse time.  They also retain the original
 arrest condition because both rates vanish when \(\KI{j}\leq\KIc\).
 
-A minimal closure is a linear positive-part relation,
+A Freund-style closure follows from the elastodynamic factorization of the
+moving-tip stress-intensity factor \citep{freund1990}.  In the form used for
+ice-shelf rifts by \citet{lipovsky2018}, it is
 \begin{equation}
- \mathcal{F}_j(q)=\pos{q-1}.
- \label{eq:linear-kinetics}
+ \mathcal{F}_j(q)=\mathcal{F}(q)
+ =\begin{cases}
+   0, & q<1,\\
+   1-q^{-2}, & q\geq1.
+  \end{cases}
+ \label{eq:freund-kinetics}
 \end{equation}
-This relation is an assumption.  It is not derived by van der Veen, and the
-calculation below should not be interpreted as a measured dynamic fracture
-law.  With equation~\eqref{eq:linear-kinetics}, the requested right-hand side
-is
+Here \(\KI{j}\) is the stress-intensity factor for a stationary crack of the
+instantaneous length and \(q=\KI{j}/\KIc\).  The function vanishes at the
+propagation threshold and approaches unity as \(q\) increases.  Near the
+threshold, \(\mathcal{F}(q)=2(q-1)+\mathcal{O}\{(q-1)^2\}\).  Setting
+\(v_j=c_{\mathrm{R}}\), where \(c_{\mathrm{R}}\) is the Rayleigh wave speed in
+ice, recovers the ideal homogeneous-material relation.  We retain \(v_j\) as
+an effective limiting speed so that unresolved dissipation can be calibrated.
+This relation is not derived by van der Veen.  With
+equation~\eqref{eq:freund-kinetics}, the requested right-hand side is
 \begin{equation}
  \boxed{
  \Dt D
  =\frac{v_{\rms}}{H}
-  \pos{\frac{\KI{\rms}(D_{\rms})}{\KIc}-1}
+  \mathcal{F}\left(\frac{\KI{\rms}(D_{\rms})}{\KIc}\right)
  +\frac{v_{\rmb}}{H}
-  \pos{\frac{\KI{\rmb}(D_{\rmb})}{\KIc}-1},
+  \mathcal{F}\left(\frac{\KI{\rmb}(D_{\rmb})}{\KIc}\right),
  \qquad D<1.
  }
  \label{eq:lefm-damage-law}
@@ -297,8 +309,10 @@ the basal crack tip, the normalized opening stresses are
  &=\Sigma-A_{\rmb}-(r_{\rmb}-1)D_{\rmb}.
  \label{eq:basal-driver}
 \end{align}
-Positive \(\Psi_j\) opens the corresponding crack.  Applying the same minimal
-kinetic assumption gives
+Positive \(\Psi_j\) opens the corresponding crack.  This approximation does
+not evaluate \(\KI{j}/\KIc\), so the Freund relation cannot be applied without
+an additional mapping between opening stress and stress intensity.  Retaining
+a separate linear algebraic closure gives
 \begin{equation}
  \boxed{
  \Dt D
@@ -311,7 +325,8 @@ kinetic assumption gives
  \label{eq:reduced-damage-law}
 \end{equation}
 The two component equations are obtained by retaining the corresponding term
-on the right-hand side.
+on the right-hand side.  In this reduced closure, \(v_j\) is a rate scale and
+does not impose the Freund speed limit.
 
 The static limits provide a direct check.  A dry surface crack arrests at
 \(D_{\rms}^{\star}=\Sigma\).  A water-filled basal crack arrests at
@@ -344,15 +359,17 @@ instead predicts the algebraic depths above.  Radar measurements of basal
 crevasse height and repeated surface topography could distinguish these
 calculations where the required boundary conditions are known.
 
-Second, if \(v_j\) is constant, the assumed linear kinetics predicts
+Second, if \(v_j\) is constant, the Freund-style kinetics predicts
 \begin{equation}
- \frac{H\Dt D_j}{\pos{\KI{j}/\KIc-1}}=v_j
+ \frac{H\Dt D_j}{1-(\KIc/\KI{j})^2}=v_j,
+ \qquad \KI{j}>\KIc,
  \label{eq:rate-prediction}
 \end{equation}
 during propagation.  Thus repeated measurements of crevasse depth should
 collapse to a constant speed for a given crack family.  A systematic
-dependence of the left-hand side on fracture excess would reject the linear
-closure while leaving the van der Veen threshold calculation intact.
+dependence of the left-hand side on fracture excess would reject the
+Freund-style closure while leaving the van der Veen threshold calculation
+intact.
 
 Third, for \(0<\Sigma<1\), the reduced model predicts that a dry surface crack
 arrests at \(D_{\rms}=\Sigma\), whereas a fully water-filled surface crack
@@ -360,11 +377,13 @@ propagates through the thickness under the same tensile stress.  This
 prediction is conditional on continued water supply.  A hydrology model is
 required to determine whether that boundary condition persists.
 
-The most important uncertainty is the kinetic function
-\(\mathcal{F}_j\).  Crack interaction, firn structure, spatially varying
-fracture toughness, and geometry-dependent weight functions are also omitted.
-These omissions affect the transient speed and may shift the arrest depth.
-They should be added only when observations require them.
+The most important uncertainty is whether the Freund-style kinetic function,
+which describes rapid elastodynamic crack growth in a homogeneous elastic
+solid, applies at the scale of an ice-column model.  Crack interaction, firn
+structure, spatially varying fracture toughness, and the geometric dependence
+of the weight functions are also omitted.  These omissions affect the
+transient speed and may shift the arrest depth.  They should be added only
+when observations require them.
 
 \section{Conclusion}
 
@@ -373,10 +392,11 @@ for the fractured thickness fraction.  The central result is
 equation~\eqref{eq:lefm-damage-law}: surface and basal damage grow only when
 their stress-intensity factors exceed ice fracture toughness, and their rates
 add until \(D=1\).  The threshold and arrest calculation come from van der
-Veen mechanics.  The linear relation between fracture excess and crack speed
-is the sole new rate closure.  Time-resolved measurements of crevasse growth
-could constrain that relation or replace it without changing the underlying
-fracture calculation.
+Veen mechanics.  The primary LEFM model uses a Freund-style relation between
+fracture excess and crack speed; the reduced zero-stress model retains a
+separate linear closure.  Time-resolved measurements of crevasse growth could
+test these relations or replace them without changing the underlying fracture
+calculation.
 
 \appendix
 \section{Finite-slab weight functions}

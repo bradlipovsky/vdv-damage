@@ -11,16 +11,25 @@ The literal LEFM form is
 
 $$
 \frac{\mathrm{D}D}{\mathrm{D}t}
-=\frac{v_s}{H}\left\langle\frac{K_{\mathrm I}^{\mathrm s}}{K_{\mathrm{Ic}}}-1\right\rangle_+
-+\frac{v_b}{H}\left\langle\frac{K_{\mathrm I}^{\mathrm b}}{K_{\mathrm{Ic}}}-1\right\rangle_+,
+=\frac{v_s}{H}\mathcal F\!\left(\frac{K_{\mathrm I}^{\mathrm s}}{K_{\mathrm{Ic}}}\right)
++\frac{v_b}{H}\mathcal F\!\left(\frac{K_{\mathrm I}^{\mathrm b}}{K_{\mathrm{Ic}}}\right),
 \qquad D<1.
 $$
 
+The Freund-style kinetic function is
+
+$$
+\mathcal F(q)=
+\begin{cases}
+0, & q<1,\\
+1-q^{-2}, & q\geq 1.
+\end{cases}
+$$
+
 The stress-intensity factors and fracture threshold follow van der Veen. The
-linear relation between fracture excess and crack-tip speed is a new,
-explicitly stated constitutive assumption. The note also gives a reduced
-algebraic zero-stress version and observational predictions that could test
-the assumed kinetics.
+kinetic closure follows the Freund formulation used by Lipovsky (2018). The
+note also gives a reduced algebraic zero-stress version and observational
+predictions that could test the assumed kinetics.
 
 ## Files
 
