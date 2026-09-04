@@ -35,6 +35,7 @@ predictions that could test the assumed kinetics.
 
 - damage_law.tex — model assumptions, derivation, predictions, and limitations
 - damage_law.pdf — compiled technical note
+- damage_law_demo.ipynb — minimal NumPy implementation with illustrative figures
 - references.bib — bibliography
 - AGENTS.md — repository research instructions
 - brad-lipovsky-academic-style-guide.md — academic prose guide
@@ -43,3 +44,6 @@ predictions that could test the assumed kinetics.
 ## Build
 
 Run make. The build requires latexmk, pdflatex, and bibtex.
+
+Run the notebook from top to bottom with Jupyter. It requires only NumPy and
+Matplotlib.
