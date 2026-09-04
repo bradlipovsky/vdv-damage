@@ -3,9 +3,9 @@
 This repository rewrites the van der Veen surface and basal crevasse criteria
 as a prognostic law for the fractured thickness fraction
 
-\[
+$$
 D=D_s+D_b=\frac{d_s+d_b}{H}.
-\]
+$$
 
 The literal LEFM form is
 
