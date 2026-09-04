@@ -2,6 +2,7 @@
 
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb}
+\usepackage{array}
 \usepackage[round]{natbib}
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
 
@@ -11,6 +12,7 @@
 \newcommand{\rmi}{\mathrm{i}}
 \newcommand{\rms}{\mathrm{s}}
 \newcommand{\rmb}{\mathrm{b}}
+\newcommand{\KI}[1]{K_{\mathrm{I}}^{#1}}
 \newcommand{\KIc}{K_{\mathrm{Ic}}}
 
 \title{Ice-column damage evolution from van der Veen crevasse mechanics}
@@ -68,11 +70,59 @@ penetrates upward a distance \(d_{\rmb}\).  The state variables are
 The model applies while \(0\leq D<1\).  Full-thickness connection occurs at
 the first-hitting time
 \begin{equation}
- t_{\mathrm{f}}=\inf\{t:D(t)=1\}.
+ t_{\mathrm{f}}=\min\{t:D(t)=1\}.
  \label{eq:failure-time}
 \end{equation}
 At \(t_{\mathrm{f}}\), the column is declared fractured through its thickness;
 the damage equation is not continued beyond this event.
+
+Table~\ref{tab:notation} summarizes the notation used below.
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.12}
+\caption{Notation.  Subscripts \(\rms\), \(\rmb\), \(\rmi\), and
+\(\mathrm{m}\) denote surface, basal, ice, and surface meltwater quantities,
+respectively.}
+\label{tab:notation}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.11\textwidth}
+                    >{\raggedright\arraybackslash}p{0.35\textwidth}
+                    >{\raggedright\arraybackslash}p{0.11\textwidth}
+                    >{\raggedright\arraybackslash}p{0.35\textwidth}@{}}
+\hline
+Symbol & Meaning and SI units & Symbol & Meaning and SI units \\
+\hline
+\(H\) & Ice thickness (\(\mathrm{m}\)) &
+\(d_{\rms},d_{\rmb}\) & Surface and basal penetration depths (\(\mathrm{m}\)) \\
+\(D_{\rms},D_{\rmb}\) & Surface and basal fractured fractions (dimensionless) &
+\(D\) & Total fractured fraction, \(D_{\rms}+D_{\rmb}\) (dimensionless) \\
+\(\boldsymbol{u}\) & Horizontal ice velocity (\(\mathrm{m\,s^{-1}}\)) &
+\(\Dt\) & Material derivative (\(\mathrm{s^{-1}}\) when applied to \(D\)) \\
+\(R_n\) & Resistive stress normal to a crevasse (\(\mathrm{Pa}\)) &
+\(\tau_{nn},\tau_{tt}\) & Deviatoric stresses normal and parallel to a crevasse (\(\mathrm{Pa}\)) \\
+\(\rho_{\rmi}\) & Ice density (\(\mathrm{kg\,m^{-3}}\)) &
+\(\rho_{\mathrm{m}},\rho_{\rmb}\) & Surface and basal water densities (\(\mathrm{kg\,m^{-3}}\)) \\
+\(g\) & Gravitational acceleration (\(\mathrm{m\,s^{-2}}\)) &
+\(a_{\rms},a_{\rmb}\) & LEFM surface and basal crack lengths (\(\mathrm{m}\)) \\
+\(h_{\rms}\) & Surface water-column height (\(\mathrm{m}\)) &
+\(\delta_{\rms}\) & Dry length above water in a surface crack (\(\mathrm{m}\)) \\
+\(p_{\rmb}^{0}\) & Basal water pressure at the crack mouth (\(\mathrm{Pa}\)) &
+\(\KI{\rms},\KI{\rmb}\) & Mode-I stress intensity factors (\(\mathrm{Pa\,m^{1/2}}\)) \\
+\(\KIc\) & Ice fracture toughness (\(\mathrm{Pa\,m^{1/2}}\)) &
+\(F,G\) & Finite-slab weight functions (dimensionless) \\
+\(\lambda,\gamma\) & Normalized crack length and integration coordinate (dimensionless) &
+\(v_{\rms},v_{\rmb}\) & Characteristic crack speeds (\(\mathrm{m\,s^{-1}}\)) \\
+\(\mathcal{F}_j\) & Assumed kinetic function (dimensionless) &
+\(\Sigma\) & Resistive stress normalized by ice overburden (dimensionless) \\
+\(W_{\rms}\) & Surface water-column fraction (dimensionless) &
+\(r_{\rms},r_{\rmb}\) & Water-to-ice density ratios (dimensionless) \\
+\(H_{\mathrm{ab}}\) & Thickness above basal water-pressure support (\(\mathrm{m}\)) &
+\(A_{\rmb}\) & \(H_{\mathrm{ab}}/H\) (dimensionless) \\
+\(\Psi_{\rms},\Psi_{\rmb}\) & Reduced normalized opening stresses (dimensionless) &
+\(t_{\mathrm{f}}\) & First time at which \(D=1\) (\(\mathrm{s}\)) \\
+\hline
+\end{tabular}
+\end{table}
 
 The calculation makes five assumptions.
 \begin{enumerate}
@@ -106,13 +156,13 @@ using \(\tau_{nn}\) alone is not mechanically equivalent
 
 The van der Veen criterion is
 \begin{equation}
- K_j>\KIc,\qquad j\in\{\rms,\rmb\},
+ \KI{j}>\KIc,\qquad j\in\{\rms,\rmb\},
  \label{eq:criterion}
 \end{equation}
-where \(K_j\) and \(\KIc\) have units of
+where \(\KI{j}\) and \(\KIc\) have units of
 \(\mathrm{Pa\,m^{1/2}}\).  A crack propagates while
 equation~\eqref{eq:criterion} holds and arrests at the first stable depth where
-\(K_j=\KIc\).
+\(\KI{j}=\KIc\).
 
 For a surface crack, let \(a_{\rms}=HD_{\rms}\), let \(y\) increase downward
 from the ice surface, and let \(\delta_{\rms}\) be the dry crack length above
@@ -120,7 +170,7 @@ the water surface.  The water-column height is
 \(h_{\rms}=\pos{a_{\rms}-\delta_{\rms}}\).  The surface stress intensity factor
 is
 \begin{align}
- K_{\rms}={}&F(\lambda_{\rms})R_n\sqrt{\pi a_{\rms}}
+ \KI{\rms}={}&F(\lambda_{\rms})R_n\sqrt{\pi a_{\rms}}
  -\frac{2\rho_{\rmi}g}{\sqrt{\pi a_{\rms}}}
   \int_0^{a_{\rms}}
   yG\left(\lambda_{\rms},\frac{y}{a_{\rms}}\right)\dd y
@@ -141,7 +191,7 @@ the bed, let \(p_{\rmb}^{0}\) be water pressure at the crack mouth, and let
 \(\rho_{\rmb}\) be the density of water in the crack.  The basal stress
 intensity factor is
 \begin{equation}
- K_{\rmb}
+ \KI{\rmb}
  =\frac{2}{\sqrt{\pi a_{\rmb}}}
   \int_0^{a_{\rmb}}
   \left\{
@@ -157,7 +207,7 @@ Here ice overburden closes the crack, whereas basal water pressure and tensile
 resistive stress open it.  Appendix~\ref{sec:weights} gives the finite-slab
 weight functions \(F\) and \(G\).
 
-LEFM requires a finite initial flaw because \(K_j\) is not defined at zero
+LEFM requires a finite initial flaw because \(\KI{j}\) is not defined at zero
 crack length.  The initial condition must therefore specify
 \(D_j(0)=D_{j0}>0\).  In addition, the finite-slab weight functions assume a
 rectangular body with a single edge crack.  Grounded basal boundary conditions
@@ -180,15 +230,15 @@ criterion is
 \begin{align}
  \Dt D_{\rms}
  &=\frac{v_{\rms}}{H}
-   \mathcal{F}_{\rms}\left(\frac{K_{\rms}}{\KIc}\right),
+   \mathcal{F}_{\rms}\left(\frac{\KI{\rms}}{\KIc}\right),
  \label{eq:surface-rate-general}\\
  \Dt D_{\rmb}
  &=\frac{v_{\rmb}}{H}
-   \mathcal{F}_{\rmb}\left(\frac{K_{\rmb}}{\KIc}\right).
+   \mathcal{F}_{\rmb}\left(\frac{\KI{\rmb}}{\KIc}\right).
  \label{eq:basal-rate-general}
 \end{align}
 These equations have units of inverse time.  They also retain the original
-arrest condition because both rates vanish when \(K_j\leq\KIc\).
+arrest condition because both rates vanish when \(\KI{j}\leq\KIc\).
 
 A minimal closure is a linear positive-part relation,
 \begin{equation}
@@ -203,9 +253,9 @@ is
  \boxed{
  \Dt D
  =\frac{v_{\rms}}{H}
-  \pos{\frac{K_{\rms}(D_{\rms})}{\KIc}-1}
+  \pos{\frac{\KI{\rms}(D_{\rms})}{\KIc}-1}
  +\frac{v_{\rmb}}{H}
-  \pos{\frac{K_{\rmb}(D_{\rmb})}{\KIc}-1},
+  \pos{\frac{\KI{\rmb}(D_{\rmb})}{\KIc}-1},
  \qquad D<1.
  }
  \label{eq:lefm-damage-law}
@@ -287,7 +337,7 @@ column remains supplied.
 No observations are analyzed in this note.  The model nevertheless makes
 three testable predictions.
 
-First, measured arrest depths should satisfy \(K_j=\KIc\) when the stress,
+First, measured arrest depths should satisfy \(\KI{j}=\KIc\) when the stress,
 thickness, and water-pressure boundary conditions are inserted into
 equations~\eqref{eq:surface-sif} and \eqref{eq:basal-sif}.  The reduced model
 instead predicts the algebraic depths above.  Radar measurements of basal
@@ -296,7 +346,7 @@ calculations where the required boundary conditions are known.
 
 Second, if \(v_j\) is constant, the assumed linear kinetics predicts
 \begin{equation}
- \frac{H\Dt D_j}{\pos{K_j/\KIc-1}}=v_j
+ \frac{H\Dt D_j}{\pos{\KI{j}/\KIc-1}}=v_j
  \label{eq:rate-prediction}
 \end{equation}
 during propagation.  Thus repeated measurements of crevasse depth should
