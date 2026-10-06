@@ -11,8 +11,8 @@ The literal LEFM form is
 
 $$
 \frac{\mathrm{D}D}{\mathrm{D}t}
-=\frac{v_s}{H}\mathcal F\!\left(\frac{K_{\mathrm I}^{\mathrm s}}{K_{\mathrm{Ic}}}\right)
-+\frac{v_b}{H}\mathcal F\!\left(\frac{K_{\mathrm I}^{\mathrm b}}{K_{\mathrm{Ic}}}\right),
+=\frac{v_s}{H}\mathcal F\left(\frac{K_{\mathrm I}^{\mathrm s}}{K_{\mathrm{Ic}}}\right)
++\frac{v_b}{H}\mathcal F\left(\frac{K_{\mathrm I}^{\mathrm b}}{K_{\mathrm{Ic}}}\right),
 \qquad D<1.
 $$
 
