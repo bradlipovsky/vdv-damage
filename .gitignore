@@ -7,3 +7,6 @@
 *.out
 *.synctex.gz
 *.toc
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
