@@ -36,6 +36,9 @@ predictions that could test the assumed kinetics.
 - damage_law.tex — model assumptions, derivation, predictions, and limitations
 - damage_law.pdf — compiled technical note
 - damage_law_demo.ipynb — minimal NumPy implementation with illustrative figures
+- stress_intensity.py — surface and basal stress intensities from a prescribed ice state
+- stress_intensity_demo.ipynb — executed examples of depth, water, orientation, and array inputs
+- test_stress_intensity.py — independent quadrature and physical-limit checks
 - ice_shelf_damage.ipynb — executed 2D Icepack shelf experiment and resolution checks
 - vdv.py — finite-slab stress intensities and adaptive Freund source integration
 - ice_shelf.py — coupled shelf flow, thickness, and transport of both crack fractions
@@ -91,3 +94,60 @@ toughness threshold, dry-crevasse arrest, terminal failure-time convergence,
 passive-transport convergence, and a coupled shelf calculation. The notebook
 also compares the first five years with a coarser mesh and a smaller timestep.
 It does not establish convergence of a long-term calving forecast.
+
+## Stress intensity factors from an ice state
+
+`stress_intensity_factors(state)` returns `(K_surface, K_basal)` in
+Pa √m, using the full finite-slab LEFM equations in the technical note.
+The function requires only NumPy and accepts scalars or broadcastable arrays:
+
+```python
+from stress_intensity import stress_intensity_factors
+
+state = {
+    "thickness": 400.0,                         # m
+    "membrane_stress": [[150e3, 0], [0, 75e3]], # Pa, not thickness-integrated
+    "crack_normal": [1.0, 0.0],                # horizontal unit normal
+    "surface_depth": 20.0,                     # m
+    "basal_depth": 60.0,                       # m
+    "surface_water_depth": 0.0,                # m above the surface crack tip
+    "basal_water_pressure": 917*9.81*400,       # Pa, prescribed here at flotation
+}
+K_surface, K_basal = stress_intensity_factors(state)
+```
+
+Supply the membrane stress tensor `M = tau_horizontal + tr(tau_horizontal) I`;
+the function calculates the normal resistive stress `n @ M @ n`. Its final
+two axes must be `(2, 2)`, and the normal's final axis must be `(2,)`.
+All other field axes broadcast to the output shape. An Icepack stress in MPa
+must be converted to Pa. Given damage fractions, use `surface_depth = H*D_s`
+and `basal_depth = H*D_b`.
+
+The caller supplies stress consistently with the chosen rheology and provides
+both water boundary conditions. Velocity alone does not specify the required
+state. Existing flaws must have positive depths and retain a positive ligament
+(`surface_depth + basal_depth < thickness`). The function returns signed stress
+intensities without clipping, adding a kinetic law, or changing the stress
+to account for damage. The finite-slab approximation omits grounded basal
+contact and interactions between cracks.
+
+Open [stress_intensity_demo.ipynb](stress_intensity_demo.ipynb) for saved
+figures and calculations, including a 2D array example. The notebook states
+the assumptions and units and shows how measured arrest depths could test
+the LEFM criterion. Its states are synthetic and prescribed, not ice-flow
+solutions.
+
+![Stress intensities versus crack depth and water conditions](figures/stress_intensity_depth.png)
+
+To reproduce the notebook and checks in a Python environment:
+
+```sh
+python -m pip install numpy scipy matplotlib pytest nbconvert ipykernel
+python -m pytest test_stress_intensity.py
+jupyter nbconvert --to notebook --execute --inplace \
+    --ExecutePreprocessor.timeout=300 stress_intensity_demo.ipynb
+```
+
+The notebook retains its figures and outputs and exports PNGs to `figures/`.
+Tests compare independent adaptive quadrature, hydrostatic cancellation,
+coordinate rotation, scalar/grid agreement, and the stated domain limits.
